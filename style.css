@@ -1,0 +1,27 @@
+/* Prompt Prepend Helper: compact controls in the right-side Generate column. */
+.prompt-prepend-controls {
+    margin-top: 8px !important;
+    padding: 8px !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+}
+
+.prompt-prepend-controls .gradio-checkbox,
+.prompt-prepend-controls .gradio-textbox,
+.prompt-prepend-controls button {
+    min-width: 0 !important;
+}
+
+.prompt-prepend-controls button {
+    width: 100% !important;
+}
+
+.prompt-prepend-controls .prose,
+.prompt-prepend-controls .markdown {
+    font-size: 0.85em !important;
+    margin: 0 !important;
+}
+
+.prompt-prepend-extra-panel {
+    margin-bottom: 4px !important;
+}
