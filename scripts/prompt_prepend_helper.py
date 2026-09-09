@@ -195,14 +195,25 @@ class PromptPrependHelper(scripts.Script):
             if existing is not None:
                 return f"Style「{name}」は既に存在します。別の名前を指定してください。"
 
-            # Save Positive only. Negative stays empty.
+            # Save Positive only. Negative stays empty. Forge Neo supports
+            # multiple style files, so assign the same authoritative default
+            # path that its StyleDatabase uses for newly created styles.
+            default_path = getattr(db, "default_path", None)
+            style_path = str(default_path) if default_path is not None else None
             try:
-                style = styles.PromptStyle(name, positive, "", None)
+                style = styles.PromptStyle(name, positive, "", style_path)
             except TypeError:
                 style = styles.PromptStyle(name, positive, "")
 
             db.styles[name] = style
             db.save_styles()
+
+            # Confirm the persisted file can be read back before reporting
+            # success. This also keeps the live Neo database synchronized.
+            if callable(reload_fn):
+                reload_fn()
+            if getattr(db, "styles", {}).get(name) is None:
+                return f"Style「{name}」を保存しましたが、再読み込みで確認できませんでした。"
             return f"Style「{name}」を登録しました（Positiveのみ / Negativeは空欄）。"
         except Exception as e:
             return f"Style登録に失敗しました: {e}"
@@ -279,10 +290,17 @@ class PromptPrependHelper(scripts.Script):
                 show_progress=False,
             )
 
-            save_style_btn.click(
+            save_style_event = save_style_btn.click(
                 fn=self._save_positive_as_style,
                 inputs=[style_name, native_prompt],
                 outputs=[style_status],
+                show_progress=False,
+            )
+            save_style_event.then(
+                fn=None,
+                inputs=[style_status],
+                outputs=[style_status],
+                js="promptPrependHelperAfterStyleSave",
                 show_progress=False,
             )
         else:

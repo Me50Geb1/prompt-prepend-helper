@@ -1,4 +1,27 @@
 (function () {
+    window.promptPrependHelperAfterStyleSave = function (status) {
+        const message = String(status || '');
+        if (!message.includes('を登録しました')) return status;
+
+        // Refresh native Forge Neo style dropdowns even when Styles Editor is
+        // not installed. Different Neo revisions have used both id patterns.
+        [
+            'refresh_txt2img_styles', 'refresh_img2img_styles',
+            'txt2img_styles_refresh', 'img2img_styles_refresh'
+        ].forEach(function (id) {
+            const button = document.getElementById(id);
+            if (button) button.click();
+        });
+
+        // Styles Editor Neo listens for this optional integration event and
+        // reloads its grid from the same file before applying dropdown choices.
+        document.dispatchEvent(new CustomEvent(
+            'prompt-prepend-helper:style-saved',
+            { detail: { status: message } }
+        ));
+        return status;
+    };
+
     function root() {
         return (typeof gradioApp === 'function') ? gradioApp() : document;
     }

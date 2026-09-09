@@ -90,6 +90,9 @@ Negative Promptは登録しません。
 
 既に同じ名前のStyleが存在する場合は上書きしません。
 
+登録に成功すると、Forge Neoのtxt2img / img2imgのStyle候補を更新します。
+Styles Editor Neoを併用している場合は、Style Editorの一覧も自動で再読み込みされます。
+
 ## Compatibility
 
 Main target:

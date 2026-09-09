@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 - 2026-09-09
+
+- Save newly registered Styles to Forge Neo's authoritative default Style file
+- Reload and verify the saved Style before reporting success
+- Refresh Forge Neo and Styles Editor Neo lists after successful registration
+
 ## 1.0.0 - 2026-09-01
 
 Initial public release.
