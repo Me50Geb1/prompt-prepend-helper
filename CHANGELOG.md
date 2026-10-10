@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.1 - 2026-09-11
+
+- Detect a prompt tag written immediately after a `<lora:...>` or `<lyco:...>` directive
+- Preserve the LoRA directive when removing the adjacent duplicate tag
+
 ## 1.1.0 - 2026-09-09
 
 - Save newly registered Styles to Forge Neo's authoritative default Style file

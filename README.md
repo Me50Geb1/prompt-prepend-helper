@@ -16,6 +16,7 @@ A prompt utility extension for **sd-webui-forge-neo**.
 - 追加Promptと既存Positive Promptの重複タグをチェック
 - 重複タグは既存Positive Prompt側から削除
 - アンダースコア、スペース、重み付きタグを考慮した重複判定
+- LoRA直後にカンマなしで続くタグも重複判定
 - 自然言語と思われる文章は重複タグ処理から除外
 - txt2img / img2img対応
 

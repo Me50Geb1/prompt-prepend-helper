@@ -40,7 +40,12 @@ class PromptPrependHelper(scripts.Script):
 
     @staticmethod
     def _split_top_level_commas(text: str):
-        """Split comma-separated prompt tags while respecting (), [], {} and <> blocks."""
+        """Split prompt tags while respecting (), [], {} and <> blocks.
+
+        Forge accepts a LoRA directive and the following tag without a comma,
+        for example ``<lora:aaa:1>1boy``. Treat the directive and the adjacent
+        tag as separate parts so duplicate detection still sees ``1boy``.
+        """
         text = text or ""
         parts = []
         buf = []
@@ -61,7 +66,25 @@ class PromptPrependHelper(scripts.Script):
         part = "".join(buf).strip()
         if part:
             parts.append(part)
-        return parts
+
+        expanded = []
+        lora_prefix = re.compile(r"^\s*(<(?:lora|lyco):[^<>]+>)", re.IGNORECASE)
+        for part in parts:
+            remaining = part
+            directives = []
+            while True:
+                match = lora_prefix.match(remaining)
+                if not match:
+                    break
+                directives.append(match.group(1).strip())
+                remaining = remaining[match.end():].strip()
+
+            if directives and remaining:
+                expanded.extend(directives)
+                expanded.append(remaining)
+            else:
+                expanded.append(part)
+        return expanded
 
     @staticmethod
     def _looks_like_natural_language(segment: str) -> bool:
